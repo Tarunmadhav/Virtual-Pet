@@ -25,12 +25,12 @@ function draw() {
 background(46,139,87);
 if(keyWentDown(UP_ARROW)){
 writeStock(foodS);
-dog.addImage("krishu",happydogimg)
+dog.addImage("krish",happydogimg)
 }
   drawSprites();
  textSize(25) 
  fill("blue") 
-text("Food:"+database,250,400) 
+text("Food:"+foodS,150,50) 
 }
 
 function readStock(data){
