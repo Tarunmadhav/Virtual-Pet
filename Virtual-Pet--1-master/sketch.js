@@ -2,6 +2,7 @@
 var dog, happyDog,  foodS, foodStock;
 var dogimg,happydogimg;
 var database;
+var foodobj,fedtime,lastfed;
 function preload()
 {
   //load images here
@@ -11,14 +12,23 @@ function preload()
 }
 
 function setup() {
-  canvas=createCanvas(500, 500);
+  createCanvas(1000, 500);
   database = firebase.database();
-  dog=createSprite(250,250,50,50);
-  dog.addImage("krish",dogimg)
-  dog.scale=0.5
-  foodStock=database.ref('Food')
-foodStock.on("value",readStock)
-}
+  console.log(database);
+ 
+  foodobject=new Food()
+  dog = createSprite(550,250,10,10);
+  dog.addImage(dogimg)
+  dog.scale=0.2
+ 
+  var dog = database.ref('Food');
+  dog.on("value", readPosition, showError);
+  feed = createButton("FeedTheFood")
+  feed.position(500,15)
+  feed.mousePressed(FeedDog)
+  add = createButton("ADD FOOD")
+  add.position(400,15)
+  add.mousePressed(AddFood)
 
 
 function draw() {  
@@ -28,14 +38,33 @@ writeStock(foodS);
 dog.addImage("krish",happydogimg)
 }
   drawSprites();
- textSize(25) 
- fill("blue") 
-text("Food:"+foodS,150,50) 
+ textSize(15) 
+ fill(255,255,254) 
+//text("Food:"+foodS,150,50) 
+if(lastfed>=12){
+  text("Last Feed: "+ lastfed%12+"PM",350,30);
+}else if(lastfed==0){
+  text("Last Feed : 12AM",350,30);
+}else{
+  text("Last Feed : "+lastfed+ "AM",350,30)
+}
+}
+fedtime=datbase.ref('FeedTime');
+fedtime.on("value",function(data){
+lastfed=data.val();
+})
+
 }
 
-function readStock(data){
-foodS=data.val();
+function readPosition(data){
+  position = data.val();
+  foodobject.updateFoodStock(position)
 }
+
+function showError(){
+  console.log("Error in writing to the database");
+}
+
 
 function writeStock(x){
 
@@ -51,3 +80,22 @@ function writeStock(x){
     Food:x
   })
 }
+
+
+function AddFood(){
+  foodS++
+  database.ref('/').update({
+    Food:foodS
+  })
+}
+
+function FeedDog(){
+
+  dog.addImage(happydogimg)
+  foodobject.updateFoodStock(foodObj.getFoodStock()-1);
+   database.ref('/').update({
+     Food:foodObj.getFoodStock(),
+     FeedTime:hour ()
+   })
+  }
+  
