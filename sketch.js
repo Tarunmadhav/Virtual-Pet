@@ -37,6 +37,7 @@ background(46,139,87);
 writeStock(foodS);
 dog.addImage("krish",happydogimg)
 }*/
+foodobject.display();
   drawSprites();
  textSize(15) 
  fill(255,255,254) 
@@ -48,15 +49,15 @@ if(lastfed>=12){
 }else{
   text("Last Feed : "+lastfed+ "AM",350,30)
 }
-}
-fedtime=datbase.ref('FeedTime');
+fedtime=database.ref('FeedTime');
 fedtime.on("value",function(data){
 lastfed=data.val();
 })
+}
 
 
 function readPosition(data){
-  position = data.val();
+  foodS = data.val();
   foodobject.updateFoodStock(foodS)
 }
 
@@ -91,7 +92,8 @@ function AddFood(){
 function FeedDog(){
 
   //dog.addImage(happydogimg)
-  foodobject.updateFoodStock(foodobj.getFoodStock()-1);
+  foodobject.updateFoodStock(foodobject.getFoodStock()-1);
+  Food:foodobject.getFoodStock()
    database.ref('/').update({
      Food:foodObj.getFoodStock(),
      FeedTime:hour ()
